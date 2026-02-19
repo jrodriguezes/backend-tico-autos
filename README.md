@@ -15,3 +15,17 @@ Mi version es: 11.0.16
 
 3. Crear el proyecto Nest
 nest new mi-api
+
+4. Instalacion de dependencias
+
+Conexión e integración de MongoDB con NestJS.
+npm i mongoose @nestjs/mongoose
+
+Manejo de variables de entorno (.env).
+npm i @nestjs/config
+
+Validación y transformación automática de datos (DTOs).
+npm i class-validator class-transformer
+
+Encriptación segura de contraseñas.
+npm i bcrypt
