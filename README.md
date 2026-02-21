@@ -29,3 +29,12 @@ npm i class-validator class-transformer
 
 Encriptación segura de contraseñas.
 npm i bcrypt
+npm install --save-dev @types/bcrypt
+
+**@nestjs/jwt**: Proporciona las herramientas para generar y verificar tokens JWT (JSON Web Tokens), permitiendo que el servidor emita una key digital al usuario tras hacer login.
+**@nestjs/passport & passport**: Es el estandar para autenticacion en Node. Permite implementar diferentes estrategias de seguridad de forma organizada.
+npm install @nestjs/jwt @nestjs/passport passport passport-jwt passport-local
+
+**passport-jwt**: Una estrategia de Passport que permite proteger rutas verificando que el usuario envie un token valido en sus peticiones.
+**passport-local**: Estrategia para validar el inicio de sesión tradicional usando un identificador (Cédula) y una contraseña.
+npm install -D @types/passport-jwt @types/passport-local
