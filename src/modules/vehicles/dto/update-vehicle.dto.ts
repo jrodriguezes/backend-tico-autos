@@ -7,7 +7,7 @@ import {
   MaxLength,
 } from 'class-validator';
 
-export class CreateVehicleDto {
+export class UpdateVehicleDto {
   @IsInt()
   @Min(1)
   ownerId: number;

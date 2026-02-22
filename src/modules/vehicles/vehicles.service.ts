@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
+import { UpdateVehicleDto } from './dto/update-vehicle.dto';
 
 @Injectable()
 export class VehiclesService {
@@ -11,7 +12,7 @@ export class VehiclesService {
     private readonly vehicleModel: Model<VehicleDocument>,
   ) {}
 
-  async create(dto: CreateVehicleDto) {
+  async createVehicle(dto: CreateVehicleDto) {
     const createdVehicle = await this.vehicleModel.create({
       ownerId: dto.ownerId,
       brand: dto.brand,
@@ -36,6 +37,39 @@ export class VehiclesService {
       plateId: createdVehicle.plateId,
       imageUrl: createdVehicle.imageUrl,
       createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+  }
+
+  async updateVehicle(_id: string, dto: UpdateVehicleDto) {
+    const updatedVehicle = await this.vehicleModel.findByIdAndUpdate(
+      _id,
+      {
+        brand: dto.brand,
+        model: dto.model,
+        year: dto.year,
+        price: dto.price,
+        status: dto.status,
+        observations: dto.observations,
+        plateId: dto.plateId,
+        imageUrl: dto.imageUrl,
+      },
+      { new: true }, // Retorna el documento actualizado);
+    );
+
+    if (!updatedVehicle) {
+      throw new Error('Vehicle not found');
+    }
+
+    return {
+      brand: updatedVehicle.brand,
+      model: updatedVehicle.model,
+      year: updatedVehicle.year,
+      price: updatedVehicle.price,
+      status: updatedVehicle.status,
+      observations: updatedVehicle.observations,
+      plateId: updatedVehicle.plateId,
+      imageUrl: updatedVehicle.imageUrl,
       updatedAt: new Date(),
     };
   }
