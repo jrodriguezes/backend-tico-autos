@@ -49,12 +49,11 @@ export class VehiclesService {
         model: dto.model,
         year: dto.year,
         price: dto.price,
-        status: dto.status,
         observations: dto.observations,
         plateId: dto.plateId,
         imageUrl: dto.imageUrl,
       },
-      { new: true }, // Retorna el documento actualizado);
+      { returnDocument: 'after' }, // Retorna el documento actualizado;
     );
 
     if (!updatedVehicle) {
@@ -66,11 +65,15 @@ export class VehiclesService {
       model: updatedVehicle.model,
       year: updatedVehicle.year,
       price: updatedVehicle.price,
-      status: updatedVehicle.status,
       observations: updatedVehicle.observations,
       plateId: updatedVehicle.plateId,
       imageUrl: updatedVehicle.imageUrl,
       updatedAt: new Date(),
     };
+  }
+
+  async getAllVehicles() {
+    const vehicles = await this.vehicleModel.find();
+    return vehicles;
   }
 }
