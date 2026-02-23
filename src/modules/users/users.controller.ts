@@ -12,7 +12,12 @@ export class UsersController {
   }
 
   @Get(':id')
-  findByIdWithHash(@Param('id') id: string) {
-    return this.usersService.findByIdWithHash(id);
+  findByIdWithHash(@Param('id') numberId: number) {
+    return this.usersService.findByIdWithHash(numberId);
+  }
+
+  @Get()
+  findAll() {
+    return this.usersService.findAll();
   }
 }

@@ -34,11 +34,11 @@ export class UsersService {
     };
   }
 
-  async findByIdWithHash(id: string) {
-    return await this.userModel.findById(id).select('+passwordHash');
+  async findByIdWithHash(numberId: number) {
+    return await this.userModel.findOne({ numberId }).select('+passwordHash');
   }
 
-  async findOneByNumberId(numberId: number) {
-    return await this.userModel.findOne({ numberId }).select('+passwordHash');
+  async findAll() {
+    return await this.userModel.find();
   }
 }
