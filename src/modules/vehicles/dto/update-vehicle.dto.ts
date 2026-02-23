@@ -2,16 +2,11 @@ import {
   IsInt,
   IsNotEmpty,
   IsString,
-  Min,
   MinLength,
   MaxLength,
 } from 'class-validator';
 
 export class UpdateVehicleDto {
-  @IsInt()
-  @Min(1)
-  ownerId: number;
-
   @IsString()
   @IsNotEmpty()
   brand: string;
@@ -27,10 +22,6 @@ export class UpdateVehicleDto {
   @IsInt()
   @IsNotEmpty()
   price: number;
-
-  @IsString()
-  @IsNotEmpty()
-  status: string;
 
   @IsString()
   observations: string;
