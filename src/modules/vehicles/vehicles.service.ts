@@ -12,33 +12,21 @@ export class VehiclesService {
     private readonly vehicleModel: Model<VehicleDocument>,
   ) {}
 
-  async createVehicle(dto: CreateVehicleDto) {
+  async createVehicle(userId: number, dto: CreateVehicleDto) {
     const createdVehicle = await this.vehicleModel.create({
-      ownerId: dto.ownerId,
+      ownerId: userId, // se toma del token, no del body
       brand: dto.brand,
       model: dto.model,
       year: dto.year,
       price: dto.price,
+      mileage: dto.mileage,
       status: dto.status,
       observations: dto.observations,
       plateId: dto.plateId,
       imageUrl: dto.imageUrl,
     });
 
-    return {
-      _id: createdVehicle._id,
-      ownerId: createdVehicle.ownerId,
-      brand: createdVehicle.brand,
-      model: createdVehicle.model,
-      year: createdVehicle.year,
-      price: createdVehicle.price,
-      status: createdVehicle.status,
-      observations: createdVehicle.observations,
-      plateId: createdVehicle.plateId,
-      imageUrl: createdVehicle.imageUrl,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+    return createdVehicle;
   }
 
   async updateVehicle(_id: string, dto: UpdateVehicleDto) {
@@ -49,6 +37,7 @@ export class VehiclesService {
         model: dto.model,
         year: dto.year,
         price: dto.price,
+        mileage: dto.mileage,
         observations: dto.observations,
         plateId: dto.plateId,
         imageUrl: dto.imageUrl,
@@ -65,6 +54,7 @@ export class VehiclesService {
       model: updatedVehicle.model,
       year: updatedVehicle.year,
       price: updatedVehicle.price,
+      mileage: updatedVehicle.mileage,
       observations: updatedVehicle.observations,
       plateId: updatedVehicle.plateId,
       imageUrl: updatedVehicle.imageUrl,
@@ -75,5 +65,9 @@ export class VehiclesService {
   async getAllVehicles() {
     const vehicles = await this.vehicleModel.find();
     return vehicles;
+  }
+
+  async getAllVehiclesByNumberId(numberId: number) {
+    return this.vehicleModel.find({ ownerId: numberId }).exec();
   }
 }

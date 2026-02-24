@@ -23,6 +23,10 @@ export class UpdateVehicleDto {
   @IsNotEmpty()
   price: number;
 
+  @IsInt()
+  @IsNotEmpty()
+  mileage: number;
+
   @IsString()
   observations: string;
 
@@ -34,5 +38,5 @@ export class UpdateVehicleDto {
 
   @IsString()
   @IsNotEmpty()
-  imageUrl: string;
+  imageUrl?: string;
 }

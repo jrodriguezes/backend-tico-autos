@@ -41,3 +41,6 @@
 #### **passport-jwt**: Una estrategia de Passport que permite proteger rutas verificando que el usuario envie un token valido en sus peticiones.
 #### **passport-local**: Estrategia para validar el inicio de sesión tradicional usando un identificador (Cédula) y una contraseña.
 - npm install -D @types/passport-jwt @types/passport-local
+### Se instala Multer para manejar la subida de archivos (imágenes) desde el frontend al backend y sus tipos para TypeScript para evitar errores de tipado en el proyecto.
+npm i multer
+npm i -D @types/multer

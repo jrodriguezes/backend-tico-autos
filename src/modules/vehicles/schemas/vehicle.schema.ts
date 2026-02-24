@@ -21,6 +21,9 @@ export class Vehicle {
   price: number;
 
   @Prop({ required: true })
+  mileage: number;
+
+  @Prop({ required: true })
   status: string;
 
   @Prop({ required: true })
