@@ -28,6 +28,10 @@ export class UpdateVehicleDto {
   mileage: number;
 
   @IsString()
+  @IsNotEmpty()
+  status: string;
+
+  @IsString()
   observations: string;
 
   @IsString()

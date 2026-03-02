@@ -1,7 +1,7 @@
 import { Vehicle, VehicleDocument } from './schemas/vehicle.schema';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';
 
@@ -62,12 +62,28 @@ export class VehiclesService {
     };
   }
 
+  async deleteVehicle(vehicleId: Types.ObjectId) {
+    return await this.vehicleModel.deleteOne({ _id: vehicleId });
+  }
+
   async getAllVehicles() {
     const vehicles = await this.vehicleModel.find();
     return vehicles;
   }
 
   async getAllVehiclesByNumberId(numberId: number) {
-    return this.vehicleModel.find({ ownerId: numberId }).exec();
+    return await this.vehicleModel.find({ ownerId: numberId });
+  }
+
+  async getVehicleByStringQueryId(vehicleId: Types.ObjectId) {
+    return await this.vehicleModel.findById({ _id: vehicleId });
+  }
+
+  async changeStatus(vehicleId: Types.ObjectId, dto: UpdateVehicleDto) {
+    const updateVehicle = await this.vehicleModel.findByIdAndUpdate(vehicleId, {
+      status: dto.status,
+    });
+
+    return updateVehicle;
   }
 }

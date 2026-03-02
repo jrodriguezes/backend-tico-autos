@@ -9,6 +9,7 @@ import {
   Req,
   UseInterceptors,
   UploadedFile,
+  Delete,
 } from '@nestjs/common';
 import { VehiclesService } from './vehicles.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -17,6 +18,7 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';
+import { Types } from 'mongoose';
 
 // Este tipo describe lo que JwtStrategy.validate() mete en req.user
 type ReqUser = {
@@ -74,5 +76,25 @@ export class VehiclesController {
   @Get('my')
   getMine(@Req() req: { user: ReqUser }) {
     return this.vehiclesService.getAllVehiclesByNumberId(req.user.numberId);
+  }
+
+  @Get('specification/:id')
+  getSpecification(@Param('id') _id: Types.ObjectId) {
+    return this.vehiclesService.getVehicleByStringQueryId(_id);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Delete(':id')
+  delete(@Param('id') _id: Types.ObjectId) {
+    return this.vehiclesService.deleteVehicle(_id);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Patch('changeStatus/:id')
+  changeStatus(
+    @Param('id') _id: Types.ObjectId,
+    @Body() dto: UpdateVehicleDto,
+  ) {
+    return this.vehiclesService.changeStatus(_id, dto);
   }
 }
