@@ -10,6 +10,7 @@ import {
   UseInterceptors,
   UploadedFile,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { VehiclesService } from './vehicles.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -19,6 +20,7 @@ import { extname } from 'path';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';
 import { Types } from 'mongoose';
+import { VehicleFiltersDto } from './dto/vehicle-filters.dto';
 
 // Este tipo describe lo que JwtStrategy.validate() mete en req.user
 type ReqUser = {
@@ -68,7 +70,25 @@ export class VehiclesController {
   }
 
   @Patch(':id')
-  update(@Param('id') _id: string, @Body() dto: UpdateVehicleDto) {
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: './uploads/vehicles',
+        filename: (req, file, cb) => {
+          const name = `${Date.now()}_${file.originalname}${extname(file.originalname)}`;
+          cb(null, name);
+        },
+      }),
+    }),
+  )
+  update(
+    @Param('id') _id: string,
+    @Body() dto: UpdateVehicleDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    if (file) {
+      dto.imageUrl = `/uploads/vehicles/${file.filename}`;
+    }
     return this.vehiclesService.updateVehicle(_id, dto);
   }
 
@@ -96,5 +116,10 @@ export class VehiclesController {
     @Body() dto: UpdateVehicleDto,
   ) {
     return this.vehiclesService.changeStatus(_id, dto);
+  }
+
+  @Get('filter')
+  getFilters(@Query() dto: VehicleFiltersDto) {
+    return this.vehiclesService.getFilteredVehicles(dto);
   }
 }
