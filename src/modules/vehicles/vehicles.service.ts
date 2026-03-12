@@ -4,6 +4,25 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';
+import { VehicleFiltersDto } from './dto/vehicle-filters.dto';
+
+type TextFilter = {
+  $regex: string;
+  $options: 'i';
+};
+
+type RangeFilter = {
+  $gte?: number;
+  $lte?: number;
+};
+
+type VehicleQuery = {
+  brand?: TextFilter;
+  model?: TextFilter;
+  year?: RangeFilter;
+  price?: RangeFilter;
+  status?: string;
+};
 
 @Injectable()
 export class VehiclesService {
@@ -85,5 +104,42 @@ export class VehiclesService {
     });
 
     return updateVehicle;
+  }
+
+  async getFilteredVehicles(dto: VehicleFiltersDto) {
+    const query: VehicleQuery = {};
+
+    if (dto.brand) {
+      query.brand = { $regex: dto.brand, $options: 'i' }; // $regex operador de mongo para que busque coincidencia en la bd, $options = case-insensitve
+    }
+
+    if (dto.model) {
+      query.model = { $regex: dto.model, $options: 'i' };
+    }
+
+    if (dto.minYear || dto.maxYear) {
+      query.year = {};
+      if (dto.minYear) {
+        query.year.$gte = dto.minYear;
+      }
+      if (dto.maxYear) {
+        query.year.$lte = dto.maxYear;
+      }
+    }
+
+    if (dto.minPrice || dto.maxPrice) {
+      query.price = {};
+      if (dto.minPrice) {
+        query.price.$gte = dto.minPrice;
+      }
+      if (dto.maxPrice) {
+        query.price.$lte = dto.maxPrice;
+      }
+    }
+    if (dto.status) {
+      query.status = dto.status;
+    }
+
+    return await this.vehicleModel.find(query);
   }
 }
