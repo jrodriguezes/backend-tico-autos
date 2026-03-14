@@ -34,8 +34,19 @@ export class VehiclesController {
   constructor(private readonly vehiclesService: VehiclesService) {}
 
   @Get()
-  getAll() {
-    return this.vehiclesService.getAllVehicles();
+  getFilters(@Query() dto: VehicleFiltersDto) {
+    return this.vehiclesService.getFilteredVehicles(dto);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('my')
+  getMine(@Req() req: { user: ReqUser }) {
+    return this.vehiclesService.getAllVehiclesByOwnerId(req.user.numberId);
+  }
+
+  @Get('specification/:id')
+  getSpecification(@Param('id') _id: Types.ObjectId) {
+    return this.vehiclesService.getVehicleByStringQueryId(_id);
   }
 
   @UseGuards(AuthGuard('jwt')) // Filtro de seguridad para que el usuario que hace la consulta sea verificado por JWT (busca el token dado por el frontend y lo valida)
@@ -93,23 +104,6 @@ export class VehiclesController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get('my')
-  getMine(@Req() req: { user: ReqUser }) {
-    return this.vehiclesService.getAllVehiclesByNumberId(req.user.numberId);
-  }
-
-  @Get('specification/:id')
-  getSpecification(@Param('id') _id: Types.ObjectId) {
-    return this.vehiclesService.getVehicleByStringQueryId(_id);
-  }
-
-  @UseGuards(AuthGuard('jwt'))
-  @Delete(':id')
-  delete(@Param('id') _id: Types.ObjectId) {
-    return this.vehiclesService.deleteVehicle(_id);
-  }
-
-  @UseGuards(AuthGuard('jwt'))
   @Patch('changeStatus/:id')
   changeStatus(
     @Param('id') _id: Types.ObjectId,
@@ -118,8 +112,9 @@ export class VehiclesController {
     return this.vehiclesService.changeStatus(_id, dto);
   }
 
-  @Get('filter')
-  getFilters(@Query() dto: VehicleFiltersDto) {
-    return this.vehiclesService.getFilteredVehicles(dto);
+  @UseGuards(AuthGuard('jwt'))
+  @Delete(':id')
+  delete(@Param('id') _id: Types.ObjectId) {
+    return this.vehiclesService.deleteVehicle(_id);
   }
 }
