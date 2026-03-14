@@ -28,4 +28,10 @@ export class VehicleFiltersDto {
   @IsOptional()
   @IsString()
   status: string;
+
+  @IsNumber()
+  page: number;
+
+  @IsNumber()
+  limit: number;
 }
