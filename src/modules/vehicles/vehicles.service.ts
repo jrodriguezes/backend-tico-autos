@@ -21,7 +21,7 @@ type VehicleQuery = {
   model?: TextFilter;
   year?: RangeFilter;
   price?: RangeFilter;
-  status?: string;
+  status?: TextFilter;
 };
 
 @Injectable()
@@ -90,7 +90,7 @@ export class VehiclesService {
     return vehicles;
   }
 
-  async getAllVehiclesByNumberId(numberId: number) {
+  async getAllVehiclesByOwnerId(numberId: number) {
     return await this.vehicleModel.find({ ownerId: numberId });
   }
 
@@ -137,9 +137,22 @@ export class VehiclesService {
       }
     }
     if (dto.status) {
-      query.status = dto.status;
+      query.status = { $regex: dto.status, $options: 'i' };
     }
 
-    return await this.vehicleModel.find(query);
+    const page = dto.page || 1;
+    const limit = dto.limit || 8;
+    const skip = (page - 1) * limit;
+
+    const total = await this.vehicleModel.countDocuments(query);
+    const data = await this.vehicleModel.find(query).skip(skip).limit(limit);
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 }
