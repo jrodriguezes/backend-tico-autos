@@ -15,4 +15,9 @@ export class UsersController {
   findByIdWithHash(@Param('id') numberId: number) {
     return this.usersService.findByIdWithHash(numberId);
   }
+
+  @Get('userNameById/:id')
+  getUserNameById(@Param('id') userId: number) {
+    return this.usersService.getOwnerNameByOwnerId(userId);
+  }
 }
