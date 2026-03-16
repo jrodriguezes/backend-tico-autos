@@ -37,8 +37,4 @@ export class UsersService {
   async findByIdWithHash(numberId: number) {
     return await this.userModel.findOne({ numberId }).select('+passwordHash');
   }
-
-  async findAll() {
-    return await this.userModel.find();
-  }
 }
